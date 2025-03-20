@@ -1,5 +1,9 @@
 import { LayoutBaseDePagina } from '../../shared/layouts';
 
 export const Dashboard = () => {
-  return <LayoutBaseDePagina titulo="Página inicial">teste</LayoutBaseDePagina>;
+  return (
+    <LayoutBaseDePagina titulo="Página inicial" barraDeFerramentas={<>Barra de Ferramentas</>}>
+      teste
+    </LayoutBaseDePagina>
+  );
 };
