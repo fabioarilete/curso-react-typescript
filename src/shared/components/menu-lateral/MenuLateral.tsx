@@ -11,8 +11,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import foto from '../../img/madruga.png';
-import { UseDrawerContext } from '../../contexts';
+import { UseAppThemeContext, UseDrawerContext } from '../../contexts';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
 interface IDrawerProps {
@@ -53,6 +54,8 @@ export const MenuLateraL: React.FC<IDrawerProps> = ({ children }) => {
 
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = UseDrawerContext();
 
+  const { toggleTheme } = UseAppThemeContext();
+
   return (
     <>
       <Drawer open={isDrawerOpen} onClose={toggleDrawerOpen} variant={smDown ? 'temporary' : 'permanent'}>
@@ -72,6 +75,16 @@ export const MenuLateraL: React.FC<IDrawerProps> = ({ children }) => {
                   onClick={smDown ? toggleDrawerOpen : undefined}
                 />
               ))}
+            </List>
+          </Box>
+          <Box>
+            <List component="nav">
+              <ListItemButton onClick={toggleTheme}>
+                <ListItemIcon>
+                  <Icon>dark_mode</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Alternar Tema" />
+              </ListItemButton>
             </List>
           </Box>
         </Box>
