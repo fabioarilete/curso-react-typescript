@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FerramentasDaListagem } from '../../shared/components';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 import { useSearchParams } from 'react-router-dom';
@@ -9,6 +9,10 @@ export const ListagemDeCidade: React.FC = () => {
   const busca = useMemo(() => {
     return searchParams.get('busca') || '';
   }, [searchParams]);
+
+  // useEffect(()=>{
+
+  // },[])
 
   return (
     <LayoutBaseDePagina
