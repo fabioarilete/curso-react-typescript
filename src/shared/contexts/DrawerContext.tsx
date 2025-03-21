@@ -19,7 +19,7 @@ interface IDrawerOption {
 
 const DrawerContex = createContext({} as IDrawerContextData);
 
-export const UseDrawerContext = () => {
+export const useDrawerContext = () => {
   return useContext(DrawerContex);
 };
 

@@ -1,5 +1,5 @@
 import { Box, Icon, IconButton, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { UseDrawerContext } from '../contexts';
+import { useDrawerContext } from '../contexts';
 import { ReactNode } from 'react';
 
 interface ILayoutBaseProps {
@@ -13,7 +13,7 @@ export const LayoutBaseDePagina: React.FC<ILayoutBaseProps> = ({ children, titul
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-  const { toggleDrawerOpen } = UseDrawerContext();
+  const { toggleDrawerOpen } = useDrawerContext();
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={1}>
