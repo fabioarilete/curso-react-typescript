@@ -1,14 +1,17 @@
+import { defineConfig } from "eslint/config";
 import globals from "globals";
-import pluginJs from "@eslint/js";
+import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
-  {languageOptions: { globals: globals.browser }},
-  {
-    "rules": {
+
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
+  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
+  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },  {rules: {
+    "prettier/prettier": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "react/react-in-jsx-scope": "off",
     "no-unused-vars": "warn",
     "camelcase": "off",
@@ -20,10 +23,10 @@ export default [
     "no-use-before-define": "off",
     "react/display-name": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "prefer-regex-literals": "off"
-  }
+    "prefer-regex-literals": "off"}
+
   },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
-];
+  
+]);
