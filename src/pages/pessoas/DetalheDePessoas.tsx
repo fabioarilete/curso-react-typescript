@@ -1,14 +1,23 @@
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LayoutBaseDePagina } from '../../shared/layouts';
 import { FerramentasDeDetalhe } from '../../shared/components';
-import { useEffect, useRef, useState } from 'react';
-import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
 import { Form } from '@unform/web';
 import { VTextField } from '../../shared/forms';
+import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
+import { FormHandles } from '@unform/core';
+
+interface IFormData {
+  email: string;
+  cidadeId: string;
+  nomeCompleto: string;
+}
 
 export const DetalheDePessoas: React.FC = () => {
   const { id = 'nova' } = useParams<'id'>();
   const navigate = useNavigate();
+
+  const formRef = useRef<FormHandles>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [nome, setNome] = useState('false');
@@ -29,7 +38,7 @@ export const DetalheDePessoas: React.FC = () => {
     }
   }, [id]);
 
-  const handleSave = () => {
+  const handleSave = (dados: IFormData) => {
     console.log('save');
   };
 
@@ -56,10 +65,10 @@ export const DetalheDePessoas: React.FC = () => {
           mostrarBotaoNovo={id !== 'nova'}
           mostrarBotaoApagar={id !== 'nova'}
           aoClicarEmSalvar={() => {
-            handleSave;
+            formRef.current?.submitForm();
           }}
           aoClicarEmSalvarEFechar={() => {
-            handleSave;
+            formRef.current?.submitForm();
           }}
           aoClicarEmApagar={() => {
             handleDelete(Number(id));
@@ -73,10 +82,10 @@ export const DetalheDePessoas: React.FC = () => {
         />
       }
     >
-      <Form onSubmit={dados => console.log(dados)}>
+      <Form ref={formRef} onSubmit={handleSave}>
         <VTextField name="nomeCompleto" />
-
-        <button type="submit">Submit</button>
+        <VTextField name="email" />
+        <VTextField name="cidadeId" />
       </Form>
     </LayoutBaseDePagina>
   );
