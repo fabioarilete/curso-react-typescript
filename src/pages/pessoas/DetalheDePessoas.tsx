@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { LayoutBaseDePagina } from '../../shared/layouts';
 import { FerramentasDeDetalhe } from '../../shared/components';
-import { Form } from '@unform/web';
-import { VTextField } from '../../shared/forms';
+import { LayoutBaseDePagina } from '../../shared/layouts';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
-import { FormHandles } from '@unform/core';
+import { Box, Button, Grid2, Paper, TextField } from '@mui/material';
 
 interface IFormData {
   email: string;
@@ -16,30 +15,34 @@ interface IFormData {
 export const DetalheDePessoas: React.FC = () => {
   const { id = 'nova' } = useParams<'id'>();
   const navigate = useNavigate();
-
-  const formRef = useRef<FormHandles>(null);
-
   const [isLoading, setIsLoading] = useState(false);
   const [nome, setNome] = useState('');
+
+  const { register, handleSubmit, setValue } = useForm<IFormData>();
 
   useEffect(() => {
     if (id !== 'nova') {
       setIsLoading(true);
-      PessoasService.getById(Number(id)).then(res => {
+
+      PessoasService.getById(Number(id)).then(result => {
         setIsLoading(false);
-        if (res instanceof Error) {
-          alert(res.message);
+
+        if (result instanceof Error) {
+          alert(result.message);
           navigate('/pessoas');
         } else {
-          setNome(res.nomeCompleto);
-          formRef.current?.setData(res);
+          setValue('cidadeId', result.cidadeId);
+          setValue('email', result.email);
+          setValue('nomeCompleto', result.nomeCompleto);
+          setNome(result.nomeCompleto);
         }
       });
     }
   }, [id]);
 
-  const handleSave = (dados: IFormData) => {
+  function handleSave(dados: IFormData) {
     setIsLoading(true);
+    console.log('teste');
     if (id === 'nova') {
       PessoasService.create(dados).then(res => {
         setIsLoading(false);
@@ -57,7 +60,14 @@ export const DetalheDePessoas: React.FC = () => {
         }
       });
     }
-  };
+  }
+
+  function handleCreatePessoa(dados: IFormData) {
+    console.log(dados);
+    handleSave(dados);
+    alert(`${dados.nomeCompleto}, você foi cadastrado com sucesso!`);
+    setNome(dados.nomeCompleto);
+  }
 
   const handleDelete = (id: number) => {
     if (confirm('Realmente deseja apagar esse registro?')) {
@@ -81,12 +91,8 @@ export const DetalheDePessoas: React.FC = () => {
           mostrarBotaoSalvarEFechar
           mostrarBotaoNovo={id !== 'nova'}
           mostrarBotaoApagar={id !== 'nova'}
-          aoClicarEmSalvar={() => {
-            formRef.current?.submitForm();
-          }}
-          aoClicarEmSalvarEFechar={() => {
-            formRef.current?.submitForm();
-          }}
+          aoClicarEmSalvar={() => handleSubmit(handleCreatePessoa)()}
+          aoClicarEmSalvarEFechar={() => handleSubmit(handleCreatePessoa)()}
           aoClicarEmApagar={() => {
             handleDelete(Number(id));
           }}
@@ -99,11 +105,31 @@ export const DetalheDePessoas: React.FC = () => {
         />
       }
     >
-      <Form ref={formRef} onSubmit={handleSave}>
-        <VTextField placeholder="Nome completo" name="nomeCompleto" />
-        <VTextField placeholder="E-mail" name="email" />
-        <VTextField placeholder="Cidade id" name="cidadeId" />
-      </Form>
+      <form>
+        <Box component={Paper} variant="outlined" margin={1} display="flex" flexDirection="column">
+          <Grid2 container direction="column" padding={2}>
+            <Grid2 direction="row">
+              <Grid2>
+                <TextField
+                  type="text"
+                  placeholder="Nome completo"
+                  {...register('nomeCompleto', { required: true })}
+                />
+              </Grid2>
+            </Grid2>
+            <Grid2 direction="row">
+              <Grid2>
+                <TextField type="text" placeholder="E-mail" {...register('email')} />
+              </Grid2>
+            </Grid2>
+            <Grid2 direction="row">
+              <Grid2>
+                <TextField type="text" placeholder="Cidade id" {...register('cidadeId')} />
+              </Grid2>
+            </Grid2>
+          </Grid2>
+        </Box>
+      </form>
     </LayoutBaseDePagina>
   );
 };
