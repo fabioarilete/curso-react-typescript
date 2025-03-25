@@ -71,6 +71,18 @@
       "cidadeId": 1,
       "email": "pedro@gmail.com",
       "nomeCompleto": "Pedro Silva"
+    },
+    {
+      "id": 16,
+      "nomeCompleto": "FABIO H G SILVA",
+      "email": "fabioarilete@gmail.com",
+      "cidadeId": "Salto Grande"
+    },
+    {
+      "nomeCompleto": "Kaio",
+      "email": "kaio@gmail.com",
+      "cidadeId": "3",
+      "id": 17
     }
   ]
 }
