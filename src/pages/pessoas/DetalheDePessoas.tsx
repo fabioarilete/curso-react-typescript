@@ -4,7 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
-import { Box, Button, Grid2, LinearProgress, Paper, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid2,
+  InputLabel,
+  LinearProgress,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 interface IFormData {
   email: string;
@@ -18,7 +27,12 @@ export const DetalheDePessoas: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [nome, setNome] = useState('');
 
-  const { register, handleSubmit, setValue } = useForm<IFormData>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<IFormData>();
 
   useEffect(() => {
     if (id !== 'nova') {
@@ -37,6 +51,10 @@ export const DetalheDePessoas: React.FC = () => {
           setNome(result.nomeCompleto);
         }
       });
+    } else {
+      setValue('nomeCompleto', '');
+      setValue('email', '');
+      setValue('cidadeId', '' as any);
     }
   }, [id]);
 
@@ -49,7 +67,7 @@ export const DetalheDePessoas: React.FC = () => {
         if (res instanceof Error) {
           alert(res.message);
         } else {
-          navigate(`/pessoas/detalhe/${res}`);
+          navigate(`/pessoas`);
         }
       });
     } else {
@@ -57,16 +75,17 @@ export const DetalheDePessoas: React.FC = () => {
         setIsLoading(false);
         if (res instanceof Error) {
           alert(res.message);
+        } else {
+          navigate(`/pessoas`);
         }
       });
     }
   }
 
   function handleCreatePessoa(dados: IFormData) {
-    console.log(dados);
     handleSave(dados);
-    alert(`${dados.nomeCompleto}, você foi cadastrado com sucesso!`);
     setNome(dados.nomeCompleto);
+    alert(`${dados.nomeCompleto}, você foi cadastrado com sucesso!`);
   }
 
   const handleDelete = (id: number) => {
@@ -114,35 +133,50 @@ export const DetalheDePessoas: React.FC = () => {
             </Grid2>
             <Grid2 direction="row">
               <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+                <InputLabel htmlFor="component-outlined">Nome completo</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="text"
-                  label="Nome completo"
                   {...register('nomeCompleto', { required: true })}
                 />
+                {errors?.nomeCompleto?.type === 'required' && (
+                  <Typography variant="caption" sx={{ color: 'red' }}>
+                    Nome é requerido!
+                  </Typography>
+                )}
               </Grid2>
             </Grid2>
             <Grid2 direction="row">
               <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+                <InputLabel htmlFor="component-outlined">E-mail</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="text"
-                  label="E-mail"
-                  {...register('email')}
+                  {...register('email', { required: true })}
                 />
+                {errors?.email?.type === 'required' && (
+                  <Typography variant="caption" sx={{ color: 'red' }}>
+                    E-mail é requerido!
+                  </Typography>
+                )}
               </Grid2>
             </Grid2>
             <Grid2 direction="row">
               <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+                <InputLabel htmlFor="component-outlined">Cidade</InputLabel>
                 <TextField
                   fullWidth
                   disabled={isLoading}
                   type="text"
-                  label="Cidade"
-                  {...register('cidadeId')}
+                  {...register('cidadeId', { required: true })}
                 />
+                {errors?.cidadeId?.type === 'required' && (
+                  <Typography variant="caption" sx={{ color: 'red' }}>
+                    Cidade id é requerido!
+                  </Typography>
+                )}
               </Grid2>
             </Grid2>
           </Grid2>
