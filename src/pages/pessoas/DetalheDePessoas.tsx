@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
-import { Box, Button, Grid2, Paper, TextField } from '@mui/material';
+import { Box, Button, Grid2, LinearProgress, Paper, TextField, Typography } from '@mui/material';
 
 interface IFormData {
   email: string;
@@ -107,24 +107,42 @@ export const DetalheDePessoas: React.FC = () => {
     >
       <form>
         <Box component={Paper} variant="outlined" margin={1} display="flex" flexDirection="column">
-          <Grid2 container direction="column" padding={2}>
+          <Grid2>{isLoading && <LinearProgress variant="indeterminate" />}</Grid2>
+          <Grid2 container direction="column" padding={2} spacing={2}>
+            <Grid2>
+              <Typography variant="h6">Geral</Typography>
+            </Grid2>
             <Grid2 direction="row">
-              <Grid2>
+              <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
                 <TextField
+                  fullWidth
+                  disabled={isLoading}
                   type="text"
-                  placeholder="Nome completo"
+                  label="Nome completo"
                   {...register('nomeCompleto', { required: true })}
                 />
               </Grid2>
             </Grid2>
             <Grid2 direction="row">
-              <Grid2>
-                <TextField type="text" placeholder="E-mail" {...register('email')} />
+              <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+                <TextField
+                  fullWidth
+                  disabled={isLoading}
+                  type="text"
+                  label="E-mail"
+                  {...register('email')}
+                />
               </Grid2>
             </Grid2>
             <Grid2 direction="row">
-              <Grid2>
-                <TextField type="text" placeholder="Cidade id" {...register('cidadeId')} />
+              <Grid2 size={{ xs: 12, sm: 12, md: 8, lg: 8, xl: 6 }}>
+                <TextField
+                  fullWidth
+                  disabled={isLoading}
+                  type="text"
+                  label="Cidade"
+                  {...register('cidadeId')}
+                />
               </Grid2>
             </Grid2>
           </Grid2>
